@@ -4,31 +4,26 @@ import {
   approveLog, fetchLog, rejectLog, requestRevision, reviewLog, submitLog, updateLog,
 } from '../../api/logs'
 import { errorMessage } from '../../api/client'
-import {
-  Button, Card, StatusBadge, TextAreaField, TextField,
-} from '../../components/ui'
+import { Button, Card, StatusBadge, TextAreaField, TextField } from '../../components/ui'
 import { useNotify } from '../../hooks/useNotify'
 import { useAuthStore } from '../../auth/store'
-import {
-  availableLogActions, ROLE_LABELS, STATUS_LABELS, STATUSES,
-} from '../../utils/constants'
+import { availableLogActions, ROLE_LABELS, STATUS_LABELS, STATUSES } from '../../utils/constants'
 import { formatDate, formatDateTime } from '../../utils/date'
 
 export default function LogDetailPage() {
-  const { id } = useParams()
-  const user = useAuthStore((s) => s.user)
-  const notify = useNotify()
-  const nav = useNavigate()
+  const { id }   = useParams()
+  const user     = useAuthStore((s) => s.user)
+  const notify   = useNotify()
+  const nav      = useNavigate()
 
-  const [log, setLog] = useState(null)
-  const [error, setError] = useState('')
+  const [log, setLog]       = useState(null)
+  const [error, setError]   = useState('')
   const [editing, setEditing] = useState(false)
-  const [busy, setBusy] = useState(false)
+  const [busy, setBusy]     = useState(false)
 
-  // Inputs for the workflow modals
-  const [reviewFeedback, setReviewFeedback] = useState('')
-  const [rejectReason, setRejectReason] = useState('')
-  const [revisionMessage, setRevisionMessage] = useState('')
+  const [reviewFeedback,   setReviewFeedback]   = useState('')
+  const [rejectReason,     setRejectReason]     = useState('')
+  const [revisionMessage,  setRevisionMessage]  = useState('')
 
   useEffect(() => { reload() }, [id])
 
@@ -51,7 +46,7 @@ export default function LogDetailPage() {
   }
 
   if (error) return <div className="alert">{error}</div>
-  if (!log) return <Card><p className="muted">Loading…</p></Card>
+  if (!log)  return <Card><p className="muted">Loading…</p></Card>
 
   const actions = availableLogActions(user, log)
 
@@ -62,26 +57,18 @@ export default function LogDetailPage() {
         actions={<StatusBadge status={log.status} />}
       >
         <div className="grid grid-2">
-          <Field label="Student" value={log.student_name} />
-          <Field label="Company" value={log.company_name} />
-          <Field label="Period" value={`${formatDate(log.week_start)} → ${formatDate(log.week_end)}`} />
+          <Field label="Student"             value={log.student_name} />
+          <Field label="Company"             value={log.company_name} />
+          <Field label="Period"              value={`${formatDate(log.week_start)} → ${formatDate(log.week_end)}`} />
           <Field label="Submission deadline" value={formatDate(log.submission_deadline)} />
-          <Field label="Submitted" value={formatDateTime(log.submitted_at)} />
-          <Field label="Reviewed" value={
-            log.reviewed_at
-              ? `${formatDateTime(log.reviewed_at)} by ${log.reviewed_by_name}`
-              : '—'
-          } />
-          <Field label="Approved" value={
-            log.approved_at
-              ? `${formatDateTime(log.approved_at)} by ${log.approved_by_name}`
-              : '—'
-          } />
-          <Field label="Rejected" value={formatDateTime(log.rejected_at)} />
+          <Field label="Submitted"           value={formatDateTime(log.submitted_at)} />
+          <Field label="Reviewed"            value={log.reviewed_at ? `${formatDateTime(log.reviewed_at)} by ${log.reviewed_by_name}` : '—'} />
+          <Field label="Approved"            value={log.approved_at ? `${formatDateTime(log.approved_at)} by ${log.approved_by_name}` : '—'} />
+          <Field label="Rejected"            value={formatDateTime(log.rejected_at)} />
         </div>
 
         <Section label="Activities">{log.activities}</Section>
-        {log.challenges && <Section label="Challenges">{log.challenges}</Section>}
+        {log.challenges      && <Section label="Challenges">{log.challenges}</Section>}
         {log.lessons_learned && <Section label="Lessons learned">{log.lessons_learned}</Section>}
         {log.review_feedback && <Section label="Review feedback">{log.review_feedback}</Section>}
         {log.rejection_reason && <Section label="Rejection reason">{log.rejection_reason}</Section>}
@@ -90,7 +77,8 @@ export default function LogDetailPage() {
 
       {editing && (
         <EditCard
-          log={log} onCancel={() => setEditing(false)}
+          log={log}
+          onCancel={() => setEditing(false)}
           onSaved={(updated) => { setLog(updated); setEditing(false); notify.success('Draft saved.') }}
         />
       )}
@@ -113,28 +101,19 @@ export default function LogDetailPage() {
               </Button>
             )}
             {actions.includes('review') && (
-              <ReviewBlock
-                feedback={reviewFeedback} setFeedback={setReviewFeedback} busy={busy}
+              <ReviewBlock feedback={reviewFeedback} setFeedback={setReviewFeedback} busy={busy}
                 onSubmit={() => action('Review saved.', () =>
-                  reviewLog(log.id, reviewFeedback).then((u) => { setReviewFeedback(''); return u })
-                )}
-              />
+                  reviewLog(log.id, reviewFeedback).then((u) => { setReviewFeedback(''); return u }))} />
             )}
             {actions.includes('reject') && (
-              <RejectBlock
-                reason={rejectReason} setReason={setRejectReason} busy={busy}
+              <RejectBlock reason={rejectReason} setReason={setRejectReason} busy={busy}
                 onSubmit={() => action('Log rejected.', () =>
-                  rejectLog(log.id, rejectReason).then((u) => { setRejectReason(''); return u })
-                )}
-              />
+                  rejectLog(log.id, rejectReason).then((u) => { setRejectReason(''); return u }))} />
             )}
             {actions.includes('request-revision') && (
-              <RevisionBlock
-                message={revisionMessage} setMessage={setRevisionMessage} busy={busy}
+              <RevisionBlock message={revisionMessage} setMessage={setRevisionMessage} busy={busy}
                 onSubmit={() => action('Revision requested.', () =>
-                  requestRevision(log.id, revisionMessage).then((u) => { setRevisionMessage(''); return u })
-                )}
-              />
+                  requestRevision(log.id, revisionMessage).then((u) => { setRevisionMessage(''); return u }))} />
             )}
           </div>
         </Card>
@@ -147,18 +126,18 @@ export default function LogDetailPage() {
 
 function Field({ label, value }) {
   return (
-    <div>
-      <div className="muted" style={{ fontSize: '0.75rem', textTransform: 'uppercase' }}>{label}</div>
-      <div>{value || '—'}</div>
+    <div style={{ padding: '0.6rem 0.75rem', background: 'var(--surface-2)', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-light)' }}>
+      <div style={{ fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.07em', color: 'var(--text-light)', marginBottom: '0.2rem' }}>{label}</div>
+      <div style={{ fontSize: '0.9rem', fontWeight: 500, color: 'var(--text)' }}>{value || '—'}</div>
     </div>
   )
 }
 
 function Section({ label, children }) {
   return (
-    <div style={{ marginTop: '0.75rem' }}>
-      <h4 style={{ marginBottom: '0.25rem' }}>{label}</h4>
-      <p style={{ whiteSpace: 'pre-wrap', margin: 0 }}>{children}</p>
+    <div style={{ marginTop: '0.75rem', padding: '1rem', background: 'var(--surface-2)', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-light)' }}>
+      <div style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.07em', color: 'var(--text-muted)', marginBottom: '0.5rem' }}>{label}</div>
+      <p style={{ whiteSpace: 'pre-wrap', margin: 0, fontSize: '0.9rem', lineHeight: 1.7 }}>{children}</p>
     </div>
   )
 }
@@ -168,10 +147,10 @@ function EditCard({ log, onCancel, onSaved }) {
     title: log.title, activities: log.activities,
     challenges: log.challenges || '', lessons_learned: log.lessons_learned || '',
   })
-  const [busy, setBusy] = useState(false)
+  const [busy, setBusy]   = useState(false)
   const [error, setError] = useState('')
 
-  const onChange = (e) => setForm({ ...form, [e.target.name]: e.target.value })
+  const onChange  = (e) => setForm({ ...form, [e.target.name]: e.target.value })
 
   const onSubmit = async (e) => {
     e.preventDefault()
@@ -185,13 +164,14 @@ function EditCard({ log, onCancel, onSaved }) {
       setBusy(false)
     }
   }
+
   return (
     <Card title="Edit draft">
       <form onSubmit={onSubmit}>
         {error && <div className="alert">{error}</div>}
-        <TextField label="Title" name="title" value={form.title} onChange={onChange} />
-        <TextAreaField label="Activities" name="activities" rows={5} value={form.activities} onChange={onChange} />
-        <TextAreaField label="Challenges" name="challenges" rows={3} value={form.challenges} onChange={onChange} />
+        <TextField    label="Title"          name="title"          value={form.title}          onChange={onChange} />
+        <TextAreaField label="Activities"    name="activities"     rows={5} value={form.activities}     onChange={onChange} />
+        <TextAreaField label="Challenges"   name="challenges"     rows={3} value={form.challenges}     onChange={onChange} />
         <TextAreaField label="Lessons learned" name="lessons_learned" rows={3} value={form.lessons_learned} onChange={onChange} />
         <div className="row">
           <Button type="submit" loading={busy}>Save</Button>
@@ -206,7 +186,7 @@ function ReviewBlock({ feedback, setFeedback, busy, onSubmit }) {
   return (
     <div style={{ flex: '1 1 240px' }}>
       <TextAreaField label="Review feedback" name="feedback" rows={3}
-                    value={feedback} onChange={(e) => setFeedback(e.target.value)} />
+                     value={feedback} onChange={(e) => setFeedback(e.target.value)} />
       <Button onClick={onSubmit} loading={busy}>Mark reviewed</Button>
     </div>
   )
@@ -216,7 +196,7 @@ function RejectBlock({ reason, setReason, busy, onSubmit }) {
   return (
     <div style={{ flex: '1 1 240px' }}>
       <TextAreaField label="Rejection reason (required)" name="reason" rows={3}
-                    value={reason} onChange={(e) => setReason(e.target.value)} />
+                     value={reason} onChange={(e) => setReason(e.target.value)} />
       <Button variant="danger" onClick={onSubmit} loading={busy} disabled={(reason || '').length < 5}>
         Reject
       </Button>
@@ -228,7 +208,7 @@ function RevisionBlock({ message, setMessage, busy, onSubmit }) {
   return (
     <div style={{ flex: '1 1 240px' }}>
       <TextAreaField label="Revision request" name="message" rows={3}
-                    value={message} onChange={(e) => setMessage(e.target.value)} />
+                     value={message} onChange={(e) => setMessage(e.target.value)} />
       <Button variant="secondary" onClick={onSubmit} loading={busy} disabled={(message || '').length < 5}>
         Request revision
       </Button>
