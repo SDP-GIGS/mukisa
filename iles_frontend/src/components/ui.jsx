@@ -1,18 +1,17 @@
 /**
- * Small set of reusable UI primitives. Kept deliberately tiny — this
- * file is the entire design system for the project.
+ * UI primitives — same API, upgraded visuals.
  */
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../auth/store'
 import { ROLE_LABELS, isAdmin, isStudent, isSupervisor, STATUS_LABELS } from '../utils/constants'
 
-// ---- Buttons ----
+// ── Buttons ──────────────────────────────────────────────────────────────────
 
 export function Button({ children, variant = 'primary', size, type = 'button', disabled, loading, ...rest }) {
   const cls = ['btn']
   if (variant === 'secondary') cls.push('btn-secondary')
-  else if (variant === 'danger') cls.push('btn-danger')
-  else if (variant === 'success') cls.push('btn-success')
+  else if (variant === 'danger')    cls.push('btn-danger')
+  else if (variant === 'success')   cls.push('btn-success')
   if (size === 'sm') cls.push('btn-sm')
   return (
     <button type={type} className={cls.join(' ')} disabled={disabled || loading} {...rest}>
@@ -22,7 +21,7 @@ export function Button({ children, variant = 'primary', size, type = 'button', d
   )
 }
 
-// ---- Form fields ----
+// ── Form fields ───────────────────────────────────────────────────────────────
 
 export function TextField({ label, name, error, ...rest }) {
   return (
@@ -60,7 +59,7 @@ export function SelectField({ label, name, options = [], error, ...rest }) {
   )
 }
 
-// ---- Cards ----
+// ── Cards ─────────────────────────────────────────────────────────────────────
 
 export function Card({ title, actions, children }) {
   return (
@@ -80,19 +79,19 @@ export function Stat({ label, value }) {
   return (
     <div className="stat">
       <div className="stat-label">{label}</div>
-      <div className="stat-value">{value}</div>
+      <div className="stat-value">{value ?? '—'}</div>
     </div>
   )
 }
 
-// ---- Status badge ----
+// ── Status badge ──────────────────────────────────────────────────────────────
 
 export function StatusBadge({ status }) {
   if (!status) return null
   return <span className={`badge badge-${status}`}>{STATUS_LABELS[status] || status}</span>
 }
 
-// ---- Table ----
+// ── Table ─────────────────────────────────────────────────────────────────────
 
 export function DataTable({ columns, rows, empty = 'No records.' }) {
   if (!rows?.length) return <div className="table-empty">{empty}</div>
@@ -114,12 +113,12 @@ export function DataTable({ columns, rows, empty = 'No records.' }) {
   )
 }
 
-// ---- Layout / navbar ----
+// ── Layout / navbar ───────────────────────────────────────────────────────────
 
 export function Layout({ children }) {
-  const user = useAuthStore((s) => s.user)
+  const user  = useAuthStore((s) => s.user)
   const clear = useAuthStore((s) => s.clear)
-  const nav = useNavigate()
+  const nav   = useNavigate()
 
   const handleLogout = () => {
     clear()
@@ -131,14 +130,24 @@ export function Layout({ children }) {
       <nav className="navbar">
         <span className="navbar-brand">ILES</span>
         <div className="navbar-links">
-          <NavLink to="/" end className={({ isActive }) => 'navbar-link' + (isActive ? ' active' : '')}>Dashboard</NavLink>
-          <NavLink to="/logs" className={({ isActive }) => 'navbar-link' + (isActive ? ' active' : '')}>Weekly Logs</NavLink>
-          <NavLink to="/placements" className={({ isActive }) => 'navbar-link' + (isActive ? ' active' : '')}>Placements</NavLink>
+          <NavLink to="/" end className={({ isActive }) => 'navbar-link' + (isActive ? ' active' : '')}>
+            Dashboard
+          </NavLink>
+          <NavLink to="/logs" className={({ isActive }) => 'navbar-link' + (isActive ? ' active' : '')}>
+            Weekly Logs
+          </NavLink>
+          <NavLink to="/placements" className={({ isActive }) => 'navbar-link' + (isActive ? ' active' : '')}>
+            Placements
+          </NavLink>
           {(isSupervisor(user) || isStudent(user)) && (
-            <NavLink to="/evaluations" className={({ isActive }) => 'navbar-link' + (isActive ? ' active' : '')}>Evaluations</NavLink>
+            <NavLink to="/evaluations" className={({ isActive }) => 'navbar-link' + (isActive ? ' active' : '')}>
+              Evaluations
+            </NavLink>
           )}
           {isAdmin(user) && (
-            <NavLink to="/users" className={({ isActive }) => 'navbar-link' + (isActive ? ' active' : '')}>Users</NavLink>
+            <NavLink to="/users" className={({ isActive }) => 'navbar-link' + (isActive ? ' active' : '')}>
+              Users
+            </NavLink>
           )}
         </div>
         <div className="navbar-user">
