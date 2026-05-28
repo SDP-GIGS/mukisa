@@ -2,7 +2,8 @@ from rest_framework import generics, permissions, viewsets
 from rest_framework.response import Response
 from .models import User
 from .serializers import UserCreateSerializer, UserSerializer
-from apps.common.choices import ROLE_COORDINATOR
+from apps.common.choices import ROLE_COORDINATOR, ROLE_ADMIN
+from apps.common.permissions import IsAdmin
 
 
 class CurrentUserView(generics.RetrieveAPIView):
@@ -26,11 +27,10 @@ class UserViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        if user.role == ROLE_COORDINATOR:
+        if user.role in (ROLE_COORDINATOR, ROLE_ADMIN):
             return User.objects.all().order_by('id')
-        return User.objects.filter(id=user.id)
 
     def create(self, request, *args, **kwargs):
-        if request.user.role != ROLE_COORDINATOR:
-            return Response({'detail': 'Only coordinators can create users.'}, status=403)
+        if request.user.role not in (ROLE_COORDINATOR, ROLE_ADMIN):
+            return Response({'detail': 'Only administrators can create users.'}, status=403)
         return super().create(request, *args, **kwargs)
