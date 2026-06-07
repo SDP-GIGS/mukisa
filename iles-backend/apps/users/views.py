@@ -38,3 +38,4 @@ class UserViewSet(viewsets.ModelViewSet):
                 {'detail': 'Only admins can create users.'}, status=403
             )
         return super().create(request, *args, **kwargs)
+ 
