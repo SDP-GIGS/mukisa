@@ -27,6 +27,7 @@ ALLOWED_HOSTS = ["mukisa-api.tagooledavid.com",
 
 CORS_ALLOWED_ORIGINS = [
     "https://mukisa-api.tagooledavid.com",
+    "https://sdp-iles.pages.dev"
     "http://localhost:5173",
     "http://127.0.0.:5173",
     
@@ -125,8 +126,6 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-# CORS — allow the React frontend during development
-CORS_ALLOW_ALL_ORIGINS = True
 
 
 # Django REST Framework
