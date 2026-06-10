@@ -5,6 +5,13 @@ Django settings for config project.
 from pathlib import Path
 from datetime import timedelta
 
+import dj_database_url
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -14,8 +21,23 @@ SECRET_KEY = 'django-insecure-ubuyaf(*q#w05_d(uu(fb!q4-6s*dalg&!ia%sn7&^h)jnr-oo
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["mukisa-api.tagooledavid.com",
+    "localhost",
+    "127.0.0.1"]
 
+CORS_ALLOWED_ORIGINS = [
+    "https://mukisa-api.tagooledavid.com",
+    "https://sdp-iles.pages.dev",
+    "http://localhost:5173",
+    "http://127.0.0.:5173",
+    
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://mukisa-api.tagooledavid.com",
+    "http://localhost:5173",
+    "http://127.0.0.:5173",
+]
 
 # Application definition
 
@@ -72,12 +94,12 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 # Database
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        default=os.environ.get('DATABASE_URL'),
+        conn_max_age=600,
+        ssl_require=True,
+    )
 }
-
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -104,8 +126,6 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-# CORS — allow the React frontend during development
-CORS_ALLOW_ALL_ORIGINS = True
 
 
 # Django REST Framework

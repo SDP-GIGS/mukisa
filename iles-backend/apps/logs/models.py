@@ -9,10 +9,13 @@ class WeeklyLog(models.Model):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='weekly_logs'
     )
     placement = models.ForeignKey(
-        'placements.InternshipPlacement',
-        on_delete=models.CASCADE,
-        related_name='weekly_logs',
-    )
+    'placements.InternshipPlacement',
+    on_delete=models.SET_NULL,
+    null=True,
+    blank=True,
+    related_name='weekly_logs',
+)
+    
     week_number = models.PositiveIntegerField()
     title = models.CharField(max_length=200)
     activities = models.TextField()
