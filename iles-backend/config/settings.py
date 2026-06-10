@@ -38,6 +38,7 @@ CORS_ALLOWED_ORIGINS = [
     "https://sdp-iles.pages.dev"
     "http://localhost:5173",
     "http://127.0.0.:5173",
+    "https://sdp-iles.pages.dev"
     
 ]
 
@@ -45,6 +46,7 @@ CSRF_TRUSTED_ORIGINS = [
     "https://mukisa-api.tagooledavid.com",
     "http://localhost:5173",
     "http://127.0.0.:5173",
+    "https://sdp-iles.pages.dev"
 ]
 
 # Application definition
