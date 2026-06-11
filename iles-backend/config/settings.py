@@ -35,10 +35,7 @@ CORS_ALLOW_METHODS = [
 
 CORS_ALLOWED_ORIGINS = [
     "https://mukisa-api.tagooledavid.com",
-<<<<<<< HEAD
     "https://sdp-iles.pages.dev",
-=======
->>>>>>> 79fa6b87d3b16e40454185a3de6b5cf5fa826fc8
     "http://localhost:5173",
     "http://127.0.0.:5173",
     "https://sdp-iles.pages.dev"
